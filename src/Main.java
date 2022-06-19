@@ -1,13 +1,16 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    static private final String[] romanNumeralsList = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
-            "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
-            "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L", "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX",
-            "LXI", "LXII", "LXIII", "LXIV", "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX",
-            "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX",
-            "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
-            "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
+    static private final String[] romanNumeralsList = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+            "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII", "XXIII", "XXIV",
+            "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI",
+            "XXXVII", "XXXVIII", "XXXIX", "XL", "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII",
+            "XLIX", "L", "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX", "LXI", "LXII", "LXIII",
+            "LXIV", "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX", "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV",
+            "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX", "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI",
+            "LXXXVII", "LXXXVIII", "LXXXIX", "XC", "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII",
+            "XCIX", "C"
     };
 
     public static void main(String[] args) {
@@ -27,82 +30,34 @@ public class Main {
     }
 
     public static String calc(String input) throws Exception {
-        char[] sim = input.toCharArray();
-        boolean sum = false, minus = false, umn = false, del = false;
-        for (char element : sim) {
-            if (element == '+') {
-                sum = true;
-            } else if (element == '-') {
-                minus = true;
-            } else if (element == '*') {
-                umn = true;
-            } else if (element == '/') {
-                del = true;
-            }
+        String[] args = input.split("[+-/*]");
+        String action = input.replaceAll("[^+-/*]", "");
+
+        if (args.length != 2 || action.length() != 1) {
+            throw new Exception("Ошибка ввода выражения (должно быть: количество переменных: 2, знаков: 1)");
         }
-        if (sum && !minus && !umn && !del) {
-            String[] peremen = input.split("[+]");
-            if (peremen.length == 2) {
-                String a = peremen[0].trim();
-                String b = peremen[1].trim();
-                if (isNumeric(a) && isNumeric(b)) {
-                    int number1 = Integer.parseInt(a), number2 = Integer.parseInt(b);
-                    if (number1 <= 10 && number1 > 0 && number2 <= 10 && number2 > 0) {
-                        int result = number1 + number2;
-                        return String.valueOf(result);
-                    } else throw new Exception("Числа не удовлетворяют входным условиям");
-                }
-                int result = romanToNumber(a) + romanToNumber(b);
-                return numToRoman(result);
-            } else throw new Exception("Больше двух переменных");
-        } else if (minus && !sum && !umn && !del) {
-            String[] peremen = input.split("-");
-            if (peremen.length == 2) {
-                String a = peremen[0].trim();
-                String b = peremen[1].trim();
-                if (isNumeric(a) && isNumeric(b)) {
-                    int number1 = Integer.parseInt(a), number2 = Integer.parseInt(b);
-                    if (number1 <= 10 && number1 > 0 && number2 <= 10 && number2 > 0) {
-                        int result = number1 - number2;
-                        return String.valueOf(result);
-                    } else throw new Exception("Числа не удовлетворяют входным условиям");
-                }
-                int result = romanToNumber(a) - romanToNumber(b);
-                return numToRoman(result);
-            } else throw new Exception("Больше двух переменных");
-        } else if (umn && !minus && !sum && !del) {
-            String[] peremen = input.split("[*]");
-            int cper = peremen.length;
-            if (cper == 2) {
-                String a = peremen[0].trim();
-                String b = peremen[1].trim();
-                if (isNumeric(a) && isNumeric(b)) {
-                    int number1 = Integer.parseInt(a), number2 = Integer.parseInt(b);
-                    if (number1 <= 10 && number1 > 0 && number2 <= 10 && number2 > 0) {
-                        int result = number1 * number2;
-                        return String.valueOf(result);
-                    } else throw new Exception("Числа не удовлетворяют входным условиям");
-                }
-                int result = romanToNumber(a) * romanToNumber(b);
-                return numToRoman(result);
-            } else throw new Exception("Больше двух переменных");
-        } else if (del && !minus && !sum && !umn) {
-            String[] peremen = input.split("/");
-            int cper = peremen.length;
-            if (cper == 2) {
-                String a = peremen[0].trim();
-                String b = peremen[1].trim();
-                if (isNumeric(a) && isNumeric(b)) {
-                    int number1 = Integer.parseInt(a), number2 = Integer.parseInt(b);
-                    if (number1 <= 10 && number1 > 0 && number2 <= 10 && number2 > 0) {
-                        int result = number1 / number2;
-                        return String.valueOf(result);
-                    } else throw new Exception("Числа не удовлетворяют входным условиям");
-                }
-                int result = romanToNumber(a) / romanToNumber(b);
-                return numToRoman(result);
-            } else throw new Exception("Больше двух переменных");
-        } else throw new Exception("Больше двух знаков, либо нет вовсе");
+
+        String number1 = args[0];
+        String number2 = args[1];
+
+        if (isNumeric(number1) && isNumeric(number2)) {
+            return String.valueOf(process(Integer.parseInt(number1), Integer.parseInt(number2), action));
+        }
+
+        int romanNumber1 = romanToNumber(number1);
+        int romanNumber2 = romanToNumber(number2);
+
+        return numToRoman(process(romanNumber1, romanNumber2, action));
+    }
+
+    private static int process(int number1, int number2, String action) throws Exception {
+        return switch (action) {
+            case "+" -> number1 + number2;
+            case "-" -> number1 - number2;
+            case "*" -> number1 * number2;
+            case "/" -> number1 / number2;
+            default -> throw new Exception("не верное действие");
+        };
     }
 
     public static boolean isNumeric(String str) {
@@ -131,7 +86,6 @@ public class Main {
     }
 
     private static String numToRoman(int numArabian) throws Exception {
-
         if (numArabian == 0) {
             throw new Exception("Римские числа должны быть > 0");
         }
