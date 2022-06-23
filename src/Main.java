@@ -37,8 +37,8 @@ public class Main {
             throw new Exception("Ошибка ввода выражения (должно быть: количество переменных: 2, знаков: 1)");
         }
 
-        String number1 = args[0];
-        String number2 = args[1];
+        String number1 = args[0].trim();
+        String number2 = args[1].trim();
 
         if (isNumeric(number1) && isNumeric(number2)) {
             return String.valueOf(process(Integer.parseInt(number1), Integer.parseInt(number2), action));
